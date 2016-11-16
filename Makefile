@@ -36,9 +36,11 @@ SQLITE_FLAGS:=\
 	-DSQLITE_ENABLE_FTS3_PARENTHESIS \
 	-DSQLITE_ENABLE_RTREE \
 	-DSQLITE_ENABLE_STAT2 \
-	-DSQLITE_HAS_CODEC
+	-DSQLITE_HAS_CODEC \
+	-fPIC
+
 	
-CFLAGS:= -I$(SQLITE_OUT) -I$(SQLITE_AMAL_DIR) $(CFLAGS) $(SQLITE_FLAGS)
+CFLAGS:= -I$(SQLITE_OUT) $(CFLAGS) $(SQLITE_FLAGS)
 
 $(SQLITE_ARCHIVE):
 	@mkdir -p $(@D)
@@ -50,7 +52,7 @@ $(SQLITE_UNPACKED): $(SQLITE_ARCHIVE)
 	    
 $(SQLITE_OUT)/org/sqlite/%.class: src/main/java/org/sqlite/%.java
 	@mkdir -p $(@D)
-	$(JAVAC) -source 1.5 -target 1.5 -sourcepath $(SRC) -d $(SQLITE_OUT) $<
+	$(JAVAC) -sourcepath $(SRC) -d $(SQLITE_OUT) $<
 
 jni-header: $(SRC)/org/sqlite/core/NativeDB.h
 
@@ -123,6 +125,9 @@ win32:
 
 linux32:
 	$(MAKE) native OS_NAME=Linux OS_ARCH=i386
+
+linux64:
+	$(MAKE) native OS_NAME=Linux OS_ARCH=x86_64
 
 sparcv9:
 	$(MAKE) native OS_NAME=SunOS OS_ARCH=sparcv9
